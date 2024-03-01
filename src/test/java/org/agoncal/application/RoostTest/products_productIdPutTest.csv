@@ -1,0 +1,11 @@
+productId,id,name,description,price,statusCode
+1,10,apple,description of the product,20,200
+2,11,banana,another product description,15,200
+3,12,cherry,yet another product description,30,200
+4,13,pear,description for pear,25,404
+5,14,grape,description for grape,35,200
+6,15,peach,description for peach,40,200
+7,16,plum,description for plum,20,404
+8,17,kiwi,description for kiwi,30,200
+9,18,melon,description for melon,50,200
+10,19,lemon,description for lemon,15,404
