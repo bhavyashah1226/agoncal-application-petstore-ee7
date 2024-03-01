@@ -1,0 +1,11 @@
+id,name,description,price,statusCode
+1,apple,This is a juicy red apple,20,200
+2,banana,Yellow and sweet tropical fruit,15,200
+3,orange,Citrus fruit with tangy flavor,18,200
+4,grape,Small round fruit, comes in bunches,10,200
+5,mango,Tropical fruit, sweet and juicy,25,200
+6,kiwi,Small fruit with green flesh and tiny black seeds,8,200
+7,pineapple,Tropical fruit with spiky skin,30,200
+8,pear,Sweet fruit with a grainy texture,15,200
+9,peach,Juicy fruit with a stone in the middle,12,200
+10,plum,Small fruit with sweet flesh and a stone,10,200
