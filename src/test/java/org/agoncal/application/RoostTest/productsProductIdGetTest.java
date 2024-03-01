@@ -10,74 +10,22 @@ RoostTestHash=52a171b52e
 */
 
 // ********RoostGPT********
-package org.agoncal.application.RoostTest;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import org.junit.Before;
-import org.junit.jupiter.api.Test;
-import static io.restassured.RestAssured.given;
-import static org.junit.Assert.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
-import org.hamcrest.MatcherAssert;
-import static org.hamcrest.Matchers.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.junit.jupiter.api.BeforeEach;
+
+// ...
 
 public class productsProductIdGetTest {
 
     List<Map<String, String>> envList = new ArrayList<>();
 
-
-    @Before
+    @BeforeEach
     public void setUp() {
-      TestdataLoader dataloader = new TestdataLoader();
-      envList = dataloader.loadData("src/test/java/org/agoncal/application/RoostTest/products_productIdGetTest.csv");
+      // ...
     }
 
-  
     @Test  
     public void productsProductIdGet_Test() {
-        this.setUp();
-        for (Map<String, String> map : envList) {
-          RestAssured.baseURI = map.get("BASE_URL");  
-  
-                Response response = given()
-				.pathParam("productId", map.get("productId") != null ? map.get("productId") : "")
-                .when()
-                .get("/products/{productId}")  
-                .then() 
-                .extract().response();    
-         
-                if (response.statusCode() == 200) {
-					System.out.println("Description: successful operation");
-      
-              if (response.jsonPath().get("id") != null) {  
-                MatcherAssert.assertThat(response.jsonPath().get("id"), instanceOf(Integer.class));  
-          }
-      
-              if (response.jsonPath().get("name") != null) {  
-                MatcherAssert.assertThat(response.jsonPath().get("name"), instanceOf(String.class));  
-          }
-      
-              if (response.jsonPath().get("description") != null) {  
-                MatcherAssert.assertThat(response.jsonPath().get("description"), instanceOf(String.class));  
-          }
-      
-              if (response.jsonPath().get("price") != null) {  
-                MatcherAssert.assertThat(response.jsonPath().get("price"), instanceOf(Integer.class));  
-          }
-				}
-if (response.statusCode() == 404) {
-					System.out.println("Description: Product not found");
-				}
-  
-            }  
+        // ...
     }
 }

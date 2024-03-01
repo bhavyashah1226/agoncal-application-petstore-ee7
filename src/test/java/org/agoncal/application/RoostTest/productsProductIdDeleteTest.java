@@ -10,58 +10,41 @@ RoostTestHash=47d9fe845f
 */
 
 // ********RoostGPT********
+
 package org.agoncal.application.RoostTest;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import org.junit.Before;
-import org.junit.jupiter.api.Test;
-import static io.restassured.RestAssured.given;
-import static org.junit.Assert.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
-import org.hamcrest.MatcherAssert;
-import static org.hamcrest.Matchers.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// ...
+import org.junit.jupiter.api.BeforeEach; // Changed from JUnit 4 to JUnit 5
+import org.agoncal.application.TestdataLoader; // Assuming this is the correct package
 
 public class productsProductIdDeleteTest {
-
-    List<Map<String, String>> envList = new ArrayList<>();
-
-
-    @Before
+// ...
+    @BeforeEach // Changed from @Before
     public void setUp() {
       TestdataLoader dataloader = new TestdataLoader();
       envList = dataloader.loadData("src/test/java/org/agoncal/application/RoostTest/products_productIdDeleteTest.csv");
     }
 
-  
     @Test  
     public void productsProductIdDelete_Test() {
         this.setUp();
         for (Map<String, String> map : envList) {
           RestAssured.baseURI = map.get("BASE_URL");  
   
-                Response response = given()
+            Response response = given()
 				.pathParam("productId", map.get("productId") != null ? map.get("productId") : "")
                 .when()
                 .delete("/products/{productId}")  
                 .then() 
                 .extract().response();    
          
-                if (response.statusCode() == 200) {
-					System.out.println("Description: Product deleted");
-				}
-if (response.statusCode() == 404) {
-					System.out.println("Description: Not Found");
-				}
-  
-            }  
+            // Added else if to handle other status codes
+            if (response.statusCode() == 200) {
+                System.out.println("Description: Product deleted");
+            } else if (response.statusCode() == 404) {
+                System.out.println("Description: Not Found");
+            } else {
+                System.out.println("Description: Unexpected status code " + response.statusCode());
+            }
+        }  
     }
 }
