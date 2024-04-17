@@ -9,14 +9,15 @@ import org.junit.Test;
  */
 public class CreditCardTest {
 
-    // ======================================
-    // =              Methods               =
-    // ======================================
+	// ======================================
+	// = Methods =
+	// ======================================
 
-    @Test
-    public void shouldCheckEqualsAndHashCode() {
+	@Test
+	public void shouldCheckEqualsAndHashCode() {
 
-        // Checks equals and hashCode is valid
-        EqualsVerifier.forClass(CreditCard.class).suppress(Warning.NONFINAL_FIELDS).verify();
-    }
+		// Checks equals and hashCode is valid
+		EqualsVerifier.forClass(CreditCard.class).suppress(Warning.NONFINAL_FIELDS).verify();
+	}
+
 }

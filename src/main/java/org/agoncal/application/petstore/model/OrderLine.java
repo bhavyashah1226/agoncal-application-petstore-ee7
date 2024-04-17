@@ -7,121 +7,107 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "order_line")
-public class OrderLine implements Serializable
-{
+public class OrderLine implements Serializable {
 
-   // ======================================
-   // = Attributes =
-   // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
-   @Column(name = "id", updatable = false, nullable = false)
-   private Long id;
-   @Version
-   @Column(name = "version")
-   private int version;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id", updatable = false, nullable = false)
+	private Long id;
 
-   @Column(nullable = false)
-   @Min(1)
-   private Integer quantity;
+	@Version
+	@Column(name = "version")
+	private int version;
 
-   @ManyToOne(cascade = CascadeType.PERSIST)
-   @JoinColumn(name = "item_fk", nullable = false)
-   private Item item;
+	@Column(nullable = false)
+	@Min(1)
+	private Integer quantity;
 
-   // ======================================
-   // = Constructors =
-   // ======================================
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "item_fk", nullable = false)
+	private Item item;
 
-   public OrderLine()
-   {
-   }
+	// ======================================
+	// = Constructors =
+	// ======================================
 
-   public OrderLine(Integer quantity, Item item)
-   {
-      this.quantity = quantity;
-      this.item = item;
-   }
+	public OrderLine() {
+	}
 
-   // ======================================
-   // = Business methods =
-   // ======================================
+	public OrderLine(Integer quantity, Item item) {
+		this.quantity = quantity;
+		this.item = item;
+	}
 
-   public Float getSubTotal()
-   {
-      return item.getUnitCost() * quantity;
-   }
+	// ======================================
+	// = Business methods =
+	// ======================================
 
-   // ======================================
-   // = Getters & setters =
-   // ======================================
+	public Float getSubTotal() {
+		return item.getUnitCost() * quantity;
+	}
 
-   public Long getId()
-   {
-      return this.id;
-   }
+	// ======================================
+	// = Getters & setters =
+	// ======================================
 
-   public void setId(final Long id)
-   {
-      this.id = id;
-   }
+	public Long getId() {
+		return this.id;
+	}
 
-   public int getVersion()
-   {
-      return this.version;
-   }
+	public void setId(final Long id) {
+		this.id = id;
+	}
 
-   public void setVersion(final int version)
-   {
-      this.version = version;
-   }
+	public int getVersion() {
+		return this.version;
+	}
 
-   public Integer getQuantity()
-   {
-      return quantity;
-   }
+	public void setVersion(final int version) {
+		this.version = version;
+	}
 
-   public void setQuantity(Integer quantity)
-   {
-      this.quantity = quantity;
-   }
+	public Integer getQuantity() {
+		return quantity;
+	}
 
-   public Item getItem()
-   {
-      return this.item;
-   }
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
 
-   public void setItem(final Item item)
-   {
-      this.item = item;
-   }
+	public Item getItem() {
+		return this.item;
+	}
 
-   // ======================================
-   // = Methods hash, equals, toString =
-   // ======================================
+	public void setItem(final Item item) {
+		this.item = item;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OrderLine orderLine = (OrderLine) o;
-        return quantity.equals(orderLine.quantity) && item.equals(orderLine.item);
-    }
+	// ======================================
+	// = Methods hash, equals, toString =
+	// ======================================
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(quantity, item);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		OrderLine orderLine = (OrderLine) o;
+		return quantity.equals(orderLine.quantity) && item.equals(orderLine.item);
+	}
 
-    @Override
-   public String toString()
-   {
-      return "OrderLine{" +
-               "id=" + id +
-               ", version=" + version +
-               ", quantity=" + quantity +
-               ", item=" + item +
-               '}';
-   }
+	@Override
+	public int hashCode() {
+		return Objects.hash(quantity, item);
+	}
+
+	@Override
+	public String toString() {
+		return "OrderLine{" + "id=" + id + ", version=" + version + ", quantity=" + quantity + ", item=" + item + '}';
+	}
+
 }

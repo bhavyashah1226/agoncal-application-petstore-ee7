@@ -1,25 +1,22 @@
 package org.agoncal.application.petstore.exceptions;
 
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
- *         Thrown when data is not valid
+ * @author Antonio Goncalves http://www.antoniogoncalves.org -- Thrown when data is not
+ * valid
  */
 
-public class ValidationException extends RuntimeException
-{
-   // ======================================
-   // =            Constructors            =
-   // ======================================
+public class ValidationException extends RuntimeException {
 
-   public ValidationException()
-   {
-      super();
-   }
+	// ======================================
+	// = Constructors =
+	// ======================================
 
-   public ValidationException(String message)
-   {
-      super(message);
-   }
+	public ValidationException() {
+		super();
+	}
+
+	public ValidationException(String message) {
+		super(message);
+	}
+
 }
