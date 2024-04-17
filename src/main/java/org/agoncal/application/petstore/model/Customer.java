@@ -18,318 +18,287 @@ import java.util.*;
  */
 
 @Entity
-@NamedQueries({
-         @NamedQuery(name = Customer.FIND_BY_LOGIN, query = "SELECT c FROM Customer c WHERE c.login = :login"),
-         @NamedQuery(name = Customer.FIND_BY_EMAIL, query = "SELECT c FROM Customer c WHERE c.email = :email"),
-         @NamedQuery(name = Customer.FIND_BY_LOGIN_PASSWORD, query = "SELECT c FROM Customer c WHERE c.login = :login AND c.password = :password"),
-         @NamedQuery(name = Customer.FIND_BY_UUID, query = "SELECT c FROM Customer c WHERE c.uuid = :uuid"),
-         @NamedQuery(name = Customer.FIND_ALL, query = "SELECT c FROM Customer c")
-})
+@NamedQueries({ @NamedQuery(name = Customer.FIND_BY_LOGIN, query = "SELECT c FROM Customer c WHERE c.login = :login"),
+		@NamedQuery(name = Customer.FIND_BY_EMAIL, query = "SELECT c FROM Customer c WHERE c.email = :email"),
+		@NamedQuery(name = Customer.FIND_BY_LOGIN_PASSWORD,
+				query = "SELECT c FROM Customer c WHERE c.login = :login AND c.password = :password"),
+		@NamedQuery(name = Customer.FIND_BY_UUID, query = "SELECT c FROM Customer c WHERE c.uuid = :uuid"),
+		@NamedQuery(name = Customer.FIND_ALL, query = "SELECT c FROM Customer c") })
 @XmlRootElement
-public class Customer implements Serializable
-{
+public class Customer implements Serializable {
 
-   // ======================================
-   // = Attributes =
-   // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
-   @Column(name = "id", updatable = false, nullable = false)
-   private Long id;
-   @Version
-   @Column(name = "version")
-   private int version;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id", updatable = false, nullable = false)
+	private Long id;
 
-   @Column(length = 50, name = "first_name", nullable = false)
-   @NotNull
-   @Size(min = 2, max = 50)
-   private String firstName;
+	@Version
+	@Column(name = "version")
+	private int version;
 
-   @Column(length = 50, name = "last_name", nullable = false)
-   @NotNull
-   @Size(min = 2, max = 50)
-   private String lastName;
+	@Column(length = 50, name = "first_name", nullable = false)
+	@NotNull
+	@Size(min = 2, max = 50)
+	private String firstName;
 
-   @Column
-   private String telephone;
+	@Column(length = 50, name = "last_name", nullable = false)
+	@NotNull
+	@Size(min = 2, max = 50)
+	private String lastName;
 
-   @Column
-   @Email
-   private String email;
+	@Column
+	private String telephone;
 
-   @Column(length = 10, nullable = false)
-   @Login
-   private String login;
+	@Column
+	@Email
+	private String email;
 
-   @Column(length = 256, nullable = false)
-   @NotNull
-   @Size(min = 1, max = 256)
-   private String password;
+	@Column(length = 10, nullable = false)
+	@Login
+	private String login;
 
-   @Column(length = 256)
-   @Size(min = 1, max = 256)
-   private String uuid;
+	@Column(length = 256, nullable = false)
+	@NotNull
+	@Size(min = 1, max = 256)
+	private String password;
 
-   private UserRole role;
+	@Column(length = 256)
+	@Size(min = 1, max = 256)
+	private String uuid;
 
-   @Column(name = "date_of_birth")
-   @Temporal(TemporalType.DATE)
-   @Past
-   private Date dateOfBirth;
+	private UserRole role;
 
-   @Transient
-   private Integer age;
+	@Column(name = "date_of_birth")
+	@Temporal(TemporalType.DATE)
+	@Past
+	private Date dateOfBirth;
 
-   @Embedded
-   @Valid
-   private Address homeAddress = new Address();
+	@Transient
+	private Integer age;
 
-   // ======================================
-   // = Constants =
-   // ======================================
+	@Embedded
+	@Valid
+	private Address homeAddress = new Address();
 
-   public static final String FIND_BY_LOGIN = "Customer.findByLogin";
-   public static final String FIND_BY_LOGIN_PASSWORD = "Customer.findByLoginAndPassword";
-   public static final String FIND_ALL = "Customer.findAll";
-   public static final String FIND_BY_EMAIL = "Customer.findByEmail";
-   public static final String FIND_BY_UUID = "Customer.findByUUID";
+	// ======================================
+	// = Constants =
+	// ======================================
 
-   // ======================================
-   // = Constructors =
-   // ======================================
+	public static final String FIND_BY_LOGIN = "Customer.findByLogin";
 
-   public Customer()
-   {
-   }
+	public static final String FIND_BY_LOGIN_PASSWORD = "Customer.findByLoginAndPassword";
 
-   public Customer(String firstName, String lastName, String login, String plainTextPassword, String email,
-            Address address)
-   {
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.login = login;
-      this.password = digestPassword(plainTextPassword);
-      this.email = email;
-      this.homeAddress = address;
-      this.dateOfBirth = new Date();
-   }
+	public static final String FIND_ALL = "Customer.findAll";
 
-   // ======================================
-   // = Lifecycle Methods =
-   // ======================================
+	public static final String FIND_BY_EMAIL = "Customer.findByEmail";
 
-   /**
-    * This method calculates the age of the customer
-    */
-   @PostLoad
-   @PostPersist
-   @PostUpdate
-   public void calculateAge()
-   {
-      if (dateOfBirth == null)
-      {
-         age = null;
-         return;
-      }
+	public static final String FIND_BY_UUID = "Customer.findByUUID";
 
-      Calendar birth = new GregorianCalendar();
-      birth.setTime(dateOfBirth);
-      Calendar now = new GregorianCalendar();
-      now.setTime(new Date());
-      int adjust = 0;
-      if (now.get(Calendar.DAY_OF_YEAR) - birth.get(Calendar.DAY_OF_YEAR) < 0)
-      {
-         adjust = -1;
-      }
-      age = now.get(Calendar.YEAR) - birth.get(Calendar.YEAR) + adjust;
-   }
+	// ======================================
+	// = Constructors =
+	// ======================================
 
-   @PrePersist
-   private void digestPassword()
-   {
-      password = digestPassword(password);
-   }
+	public Customer() {
+	}
 
-   // ======================================
-   // = Business methods =
-   // ======================================
+	public Customer(String firstName, String lastName, String login, String plainTextPassword, String email,
+			Address address) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.login = login;
+		this.password = digestPassword(plainTextPassword);
+		this.email = email;
+		this.homeAddress = address;
+		this.dateOfBirth = new Date();
+	}
 
-   /**
-    * Digest password with <code>SHA-256</code> then encode it with Base64.
-    *
-    * @param plainTextPassword the password to digest and encode
-    * @return digested password
-    */
-   public String digestPassword(String plainTextPassword)
-   {
-      try
-      {
-         MessageDigest md = MessageDigest.getInstance("SHA-256");
-         md.update(plainTextPassword.getBytes("UTF-8"));
-         byte[] passwordDigest = md.digest();
-         return Base64.getEncoder().encodeToString(passwordDigest);
-      }
-      catch (Exception e)
-      {
-         throw new RuntimeException("Exception encoding password", e);
-      }
-   }
+	// ======================================
+	// = Lifecycle Methods =
+	// ======================================
 
-   // ======================================
-   // = Getters & setters =
-   // ======================================
+	/**
+	 * This method calculates the age of the customer
+	 */
+	@PostLoad
+	@PostPersist
+	@PostUpdate
+	public void calculateAge() {
+		if (dateOfBirth == null) {
+			age = null;
+			return;
+		}
 
-   public Long getId()
-   {
-      return this.id;
-   }
+		Calendar birth = new GregorianCalendar();
+		birth.setTime(dateOfBirth);
+		Calendar now = new GregorianCalendar();
+		now.setTime(new Date());
+		int adjust = 0;
+		if (now.get(Calendar.DAY_OF_YEAR) - birth.get(Calendar.DAY_OF_YEAR) < 0) {
+			adjust = -1;
+		}
+		age = now.get(Calendar.YEAR) - birth.get(Calendar.YEAR) + adjust;
+	}
 
-   public void setId(final Long id)
-   {
-      this.id = id;
-   }
+	@PrePersist
+	private void digestPassword() {
+		password = digestPassword(password);
+	}
 
-   public int getVersion()
-   {
-      return this.version;
-   }
+	// ======================================
+	// = Business methods =
+	// ======================================
 
-   public void setVersion(final int version)
-   {
-      this.version = version;
-   }
+	/**
+	 * Digest password with <code>SHA-256</code> then encode it with Base64.
+	 * @param plainTextPassword the password to digest and encode
+	 * @return digested password
+	 */
+	public String digestPassword(String plainTextPassword) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			md.update(plainTextPassword.getBytes("UTF-8"));
+			byte[] passwordDigest = md.digest();
+			return Base64.getEncoder().encodeToString(passwordDigest);
+		}
+		catch (Exception e) {
+			throw new RuntimeException("Exception encoding password", e);
+		}
+	}
 
-   public String getLogin()
-   {
-      return login;
-   }
+	// ======================================
+	// = Getters & setters =
+	// ======================================
 
-   public void setLogin(String login)
-   {
-      this.login = login;
-   }
+	public Long getId() {
+		return this.id;
+	}
 
-   public UserRole getRole()
-   {
-      return role;
-   }
+	public void setId(final Long id) {
+		this.id = id;
+	}
 
-   public void setRole(UserRole role)
-   {
-      this.role = role;
-   }
+	public int getVersion() {
+		return this.version;
+	}
 
-   public String getUuid()
-   {
-      return uuid;
-   }
+	public void setVersion(final int version) {
+		this.version = version;
+	}
 
-   public void setUuid(String uuid)
-   {
-      this.uuid = uuid;
-   }
+	public String getLogin() {
+		return login;
+	}
 
-   public String getPassword()
-   {
-      return password;
-   }
+	public void setLogin(String login) {
+		this.login = login;
+	}
 
-   public void setPassword(String password)
-   {
-      this.password = password;
-   }
+	public UserRole getRole() {
+		return role;
+	}
 
-   public String getFirstName()
-   {
-      return firstName;
-   }
+	public void setRole(UserRole role) {
+		this.role = role;
+	}
 
-   public void setFirstName(String firstName)
-   {
-      this.firstName = firstName;
-   }
+	public String getUuid() {
+		return uuid;
+	}
 
-   public String getLastName()
-   {
-      return lastName;
-   }
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 
-   public void setLastName(String lastName)
-   {
-      this.lastName = lastName;
-   }
+	public String getPassword() {
+		return password;
+	}
 
-   public String getFullName()
-   {
-      return firstName + " " + lastName;
-   }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-   public String getTelephone()
-   {
-      return telephone;
-   }
+	public String getFirstName() {
+		return firstName;
+	}
 
-   public void setTelephone(String telephone)
-   {
-      this.telephone = telephone;
-   }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-   public String getEmail()
-   {
-      return email;
-   }
+	public String getLastName() {
+		return lastName;
+	}
 
-   public void setEmail(String email)
-   {
-      this.email = email;
-   }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-   public Date getDateOfBirth()
-   {
-      return dateOfBirth;
-   }
+	public String getFullName() {
+		return firstName + " " + lastName;
+	}
 
-   public void setDateOfBirth(Date dateOfBirth)
-   {
-      this.dateOfBirth = dateOfBirth;
-   }
+	public String getTelephone() {
+		return telephone;
+	}
 
-   public Integer getAge()
-   {
-      return age;
-   }
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
 
-   public Address getHomeAddress()
-   {
-      return homeAddress;
-   }
+	public String getEmail() {
+		return email;
+	}
 
-   public void setHomeAddress(Address homeAddress)
-   {
-      this.homeAddress = homeAddress;
-   }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-   // ======================================
-   // = Methods hash, equals, toString =
-   // ======================================
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Customer customer = (Customer) o;
-        return login.equals(customer.login);
-    }
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(login);
-    }
+	public Integer getAge() {
+		return age;
+	}
 
-    @Override
-   public String toString()
-   {
-      return firstName + ' ' + lastName + " (" + login + ")";
-   }
+	public Address getHomeAddress() {
+		return homeAddress;
+	}
+
+	public void setHomeAddress(Address homeAddress) {
+		this.homeAddress = homeAddress;
+	}
+
+	// ======================================
+	// = Methods hash, equals, toString =
+	// ======================================
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Customer customer = (Customer) o;
+		return login.equals(customer.login);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(login);
+	}
+
+	@Override
+	public String toString() {
+		return firstName + ' ' + lastName + " (" + login + ")";
+	}
+
 }

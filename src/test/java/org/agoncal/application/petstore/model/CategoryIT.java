@@ -22,48 +22,51 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Arquillian.class)
 public class CategoryIT {
 
-    // ======================================
-    // =             Attributes             =
-    // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-    @Inject
-    private Validator validator;
+	@Inject
+	private Validator validator;
 
-    // ======================================
-    // =          Lifecycle Methods         =
-    // ======================================
+	// ======================================
+	// = Lifecycle Methods =
+	// ======================================
 
-    @Deployment
-    public static JavaArchive jar() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClass(Category.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
+	@Deployment
+	public static JavaArchive jar() {
+		return ShrinkWrap.create(JavaArchive.class)
+			.addClass(Category.class)
+			.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+	}
 
-    // ======================================
-    // =              Methods               =
-    // ======================================
+	// ======================================
+	// = Methods =
+	// ======================================
 
-    @Test
-    public void shouldCreateAValidCategory() {
+	@Test
+	public void shouldCreateAValidCategory() {
 
-        // Creates an object
-        Category category = new Category("Fish", "Any of numerous cold-blooded aquatic vertebrates characteristically having fins, gills, and a streamlined body");
+		// Creates an object
+		Category category = new Category("Fish",
+				"Any of numerous cold-blooded aquatic vertebrates characteristically having fins, gills, and a streamlined body");
 
-        // Checks the object is valid
-        assertEquals("Should have not constraint violation", 0, validator.validate(category).size());
-    }
+		// Checks the object is valid
+		assertEquals("Should have not constraint violation", 0, validator.validate(category).size());
+	}
 
-    @Test
-    public void shouldBeAbleToMarshallAndUnmarchallIntoXML() throws Exception {
+	@Test
+	public void shouldBeAbleToMarshallAndUnmarchallIntoXML() throws Exception {
 
-        // Creates an object
-        Category category = new Category("Fish", "Any of numerous cold-blooded aquatic vertebrates characteristically having fins, gills, and a streamlined body");
+		// Creates an object
+		Category category = new Category("Fish",
+				"Any of numerous cold-blooded aquatic vertebrates characteristically having fins, gills, and a streamlined body");
 
-        // Marshalls it to XML
-        StringWriter writer = new StringWriter();
-        JAXBContext context = JAXBContext.newInstance(Category.class);
-        Marshaller m = context.createMarshaller();
-        m.marshal(category, writer);
-    }
+		// Marshalls it to XML
+		StringWriter writer = new StringWriter();
+		JAXBContext context = JAXBContext.newInstance(Category.class);
+		Marshaller m = context.createMarshaller();
+		m.marshal(category, writer);
+	}
+
 }
