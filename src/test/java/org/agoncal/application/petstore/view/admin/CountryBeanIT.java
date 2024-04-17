@@ -14,74 +14,71 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-public class CountryBeanIT
-{
+public class CountryBeanIT {
 
-   // ======================================
-   // =             Attributes             =
-   // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-   @Inject
-   private CountryBean countrybean;
+	@Inject
+	private CountryBean countrybean;
 
-   // ======================================
-   // =             Deployment             =
-   // ======================================
+	// ======================================
+	// = Deployment =
+	// ======================================
 
-   @Deployment
-   public static JavaArchive createDeployment()
-   {
-      return ShrinkWrap.create(JavaArchive.class)
-            .addClass(CountryBean.class)
-            .addClass(Country.class)
-            .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-   }
+	@Deployment
+	public static JavaArchive createDeployment() {
+		return ShrinkWrap.create(JavaArchive.class)
+			.addClass(CountryBean.class)
+			.addClass(Country.class)
+			.addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+			.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+	}
 
-   // ======================================
-   // =             Test Cases             =
-   // ======================================
+	// ======================================
+	// = Test Cases =
+	// ======================================
 
-   @Test
-   public void should_be_deployed()
-   {
-      Assert.assertNotNull(countrybean);
-   }
+	@Test
+	public void should_be_deployed() {
+		Assert.assertNotNull(countrybean);
+	}
 
-   @Test
-   public void should_crud()
-   {
-      // Creates an object
-      Country country = new Country("DV", "Dummy value", "Dummy value", "DMV", "DMV");
+	@Test
+	public void should_crud() {
+		// Creates an object
+		Country country = new Country("DV", "Dummy value", "Dummy value", "DMV", "DMV");
 
-      // Inserts the object into the database
-      countrybean.setCountry(country);
-      countrybean.create();
-      countrybean.update();
-      country = countrybean.getCountry();
-      assertNotNull(country.getId());
+		// Inserts the object into the database
+		countrybean.setCountry(country);
+		countrybean.create();
+		countrybean.update();
+		country = countrybean.getCountry();
+		assertNotNull(country.getId());
 
-      // Finds the object from the database and checks it's the right one
-      country = countrybean.findById(country.getId());
-      assertEquals("Dummy value", country.getName());
+		// Finds the object from the database and checks it's the right one
+		country = countrybean.findById(country.getId());
+		assertEquals("Dummy value", country.getName());
 
-      // Deletes the object from the database and checks it's not there anymore
-      countrybean.setId(country.getId());
-      countrybean.create();
-      countrybean.delete();
-      country = countrybean.findById(country.getId());
-      assertNull(country);
-   }
+		// Deletes the object from the database and checks it's not there anymore
+		countrybean.setId(country.getId());
+		countrybean.create();
+		countrybean.delete();
+		country = countrybean.findById(country.getId());
+		assertNull(country);
+	}
 
-   @Test
-   public void should_paginate()
-   {
-      // Creates an empty example
-      Country example = new Country();
+	@Test
+	public void should_paginate() {
+		// Creates an empty example
+		Country example = new Country();
 
-      // Paginates through the example
-      countrybean.setExample(example);
-      countrybean.paginate();
-      assertTrue((countrybean.getPageItems().size() == countrybean.getPageSize()) || (countrybean.getPageItems().size() == countrybean.getCount()));
-   }
+		// Paginates through the example
+		countrybean.setExample(example);
+		countrybean.paginate();
+		assertTrue((countrybean.getPageItems().size() == countrybean.getPageSize())
+				|| (countrybean.getPageItems().size() == countrybean.getCount()));
+	}
+
 }

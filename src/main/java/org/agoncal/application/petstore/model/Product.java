@@ -11,140 +11,132 @@ import java.util.Objects;
 @Entity
 @Cacheable
 @NamedQueries({
-         // TODO fetch doesn't work with GlassFish
-         // @NamedQuery(name = Product.FIND_BY_CATEGORY_NAME, query =
-         // "SELECT p FROM Product p LEFT JOIN FETCH p.items LEFT JOIN FETCH p.category WHERE p.category.name =
-         // :pname"),
-         @NamedQuery(name = Product.FIND_BY_CATEGORY_NAME, query = "SELECT p FROM Product p WHERE p.category.name = :pname"),
-         @NamedQuery(name = Product.FIND_ALL, query = "SELECT p FROM Product p")
-})
+		// TODO fetch doesn't work with GlassFish
+		// @NamedQuery(name = Product.FIND_BY_CATEGORY_NAME, query =
+		// "SELECT p FROM Product p LEFT JOIN FETCH p.items LEFT JOIN FETCH p.category
+		// WHERE p.category.name =
+		// :pname"),
+		@NamedQuery(name = Product.FIND_BY_CATEGORY_NAME,
+				query = "SELECT p FROM Product p WHERE p.category.name = :pname"),
+		@NamedQuery(name = Product.FIND_ALL, query = "SELECT p FROM Product p") })
 @XmlRootElement
-public class Product implements Serializable
-{
+public class Product implements Serializable {
 
-   // ======================================
-   // = Attributes =
-   // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
-   @Column(name = "id", updatable = false, nullable = false)
-   private Long id;
-   @Version
-   @Column(name = "version")
-   private int version;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id", updatable = false, nullable = false)
+	private Long id;
 
-   @Column(length = 30, nullable = false)
-   @NotNull
-   @Size(min = 1, max = 30)
-   private String name;
+	@Version
+	@Column(name = "version")
+	private int version;
 
-   @Column(length = 3000, nullable = false)
-   @NotNull
-   @Size(max = 3000)
-   private String description;
+	@Column(length = 30, nullable = false)
+	@NotNull
+	@Size(min = 1, max = 30)
+	private String name;
 
-   @ManyToOne(cascade = CascadeType.PERSIST)
-   @JoinColumn(name = "category_fk", nullable = false)
-   @XmlTransient
-   private Category category;
+	@Column(length = 3000, nullable = false)
+	@NotNull
+	@Size(max = 3000)
+	private String description;
 
-   // ======================================
-   // = Constants =
-   // ======================================
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "category_fk", nullable = false)
+	@XmlTransient
+	private Category category;
 
-   public static final String FIND_BY_CATEGORY_NAME = "Product.findByCategoryName";
-   public static final String FIND_ALL = "Product.findAll";
+	// ======================================
+	// = Constants =
+	// ======================================
 
-   // ======================================
-   // = Constructors =
-   // ======================================
+	public static final String FIND_BY_CATEGORY_NAME = "Product.findByCategoryName";
 
-   public Product()
-   {
-   }
+	public static final String FIND_ALL = "Product.findAll";
 
-   public Product(String name, String description, Category category)
-   {
-      this.name = name;
-      this.description = description;
-      this.category = category;
-   }
+	// ======================================
+	// = Constructors =
+	// ======================================
 
-   // ======================================
-   // = Getters & setters =
-   // ======================================
+	public Product() {
+	}
 
-   public Long getId()
-   {
-      return this.id;
-   }
+	public Product(String name, String description, Category category) {
+		this.name = name;
+		this.description = description;
+		this.category = category;
+	}
 
-   public void setId(final Long id)
-   {
-      this.id = id;
-   }
+	// ======================================
+	// = Getters & setters =
+	// ======================================
 
-   public int getVersion()
-   {
-      return this.version;
-   }
+	public Long getId() {
+		return this.id;
+	}
 
-   public void setVersion(final int version)
-   {
-      this.version = version;
-   }
+	public void setId(final Long id) {
+		this.id = id;
+	}
 
-   public String getName()
-   {
-      return name;
-   }
+	public int getVersion() {
+		return this.version;
+	}
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+	public void setVersion(final int version) {
+		this.version = version;
+	}
 
-   public String getDescription()
-   {
-      return description;
-   }
+	public String getName() {
+		return name;
+	}
 
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-   public Category getCategory()
-   {
-      return this.category;
-   }
+	public String getDescription() {
+		return description;
+	}
 
-   public void setCategory(final Category category)
-   {
-      this.category = category;
-   }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-   // ======================================
-   // = Methods hash, equals, toString =
-   // ======================================
+	public Category getCategory() {
+		return this.category;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return name.equals(product.name) && description.equals(product.description);
-    }
+	public void setCategory(final Category category) {
+		this.category = category;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, description);
-    }
+	// ======================================
+	// = Methods hash, equals, toString =
+	// ======================================
 
-    @Override
-   public String toString()
-   {
-      return name;
-   }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Product product = (Product) o;
+		return name.equals(product.name) && description.equals(product.description);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, description);
+	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
+
 }

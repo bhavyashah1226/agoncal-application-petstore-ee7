@@ -13,46 +13,39 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import java.io.IOException;
 
 /**
- * @author blep
- *         Date: 12/02/12
- *         Time: 12:29
+ * @author blep Date: 12/02/12 Time: 12:29
  */
 
 @Named
-public class SimpleCallbackHandler implements CallbackHandler
-{
+public class SimpleCallbackHandler implements CallbackHandler {
 
-   // ======================================
-   // =             Attributes             =
-   // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-   @Inject
-   //@RequestScoped
-   private CredentialsBean credentials;
+	@Inject
+	// @RequestScoped
+	private CredentialsBean credentials;
 
-   // ======================================
-   // =          Business methods          =
-   // ======================================
+	// ======================================
+	// = Business methods =
+	// ======================================
 
-   @Override
-   public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException
-   {
-      for (Callback callback : callbacks)
-      {
-         if (callback instanceof NameCallback)
-         {
-            NameCallback nameCallback = (NameCallback) callback;
-            nameCallback.setName(credentials.getLogin());
-         }
-         else if (callback instanceof PasswordCallback)
-         {
-            PasswordCallback passwordCallback = (PasswordCallback) callback;
-            passwordCallback.setPassword(credentials.getPassword().toCharArray());
-         }
-         else
-         {
-            throw new UnsupportedCallbackException(callback);
-         }
-      }
-   }
+	@Override
+	public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+		for (Callback callback : callbacks) {
+			if (callback instanceof NameCallback) {
+				NameCallback nameCallback = (NameCallback) callback;
+				nameCallback.setName(credentials.getLogin());
+			}
+			else if (callback instanceof PasswordCallback) {
+				PasswordCallback passwordCallback = (PasswordCallback) callback;
+				passwordCallback.setPassword(credentials.getPassword().toCharArray());
+			}
+			else {
+				throw new UnsupportedCallbackException(callback);
+			}
+		}
+	}
+
 }

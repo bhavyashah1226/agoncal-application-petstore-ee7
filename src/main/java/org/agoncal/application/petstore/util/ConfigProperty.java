@@ -10,9 +10,11 @@ import java.lang.annotation.Documented;
 
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER,
-      ElementType.TYPE })
+@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
 @Documented
 public @interface ConfigProperty {
-    @Nonbinding String value() default "";
+
+	@Nonbinding
+	String value() default "";
+
 }

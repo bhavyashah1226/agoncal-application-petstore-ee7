@@ -19,37 +19,38 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Arquillian.class)
 public class CustomerIT {
 
-    // ======================================
-    // =             Attributes             =
-    // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-    @Inject
-    private Validator validator;
+	@Inject
+	private Validator validator;
 
-    // ======================================
-    // =          Lifecycle Methods         =
-    // ======================================
+	// ======================================
+	// = Lifecycle Methods =
+	// ======================================
 
-    @Deployment
-    public static JavaArchive jar() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClasses(Customer.class, Category.class, Address.class, Country.class, UserRole.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
+	@Deployment
+	public static JavaArchive jar() {
+		return ShrinkWrap.create(JavaArchive.class)
+			.addClasses(Customer.class, Category.class, Address.class, Country.class, UserRole.class)
+			.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+	}
 
-    // ======================================
-    // =              Methods               =
-    // ======================================
+	// ======================================
+	// = Methods =
+	// ======================================
 
-    @Test
-    public void shouldCreateAValidCustomer() {
+	@Test
+	public void shouldCreateAValidCustomer() {
 
-        // Creates an object
-        Country country = new Country("DV", "Dummy value", "Dummy value", "DMV", "DMV");
-        Address address = new Address("78 Gnu Rd", "Texas", "666", country);
-        Customer customer = new Customer("Paul", "Mc Cartney", "pmac", "pmac", "paul@beales.com", address);
+		// Creates an object
+		Country country = new Country("DV", "Dummy value", "Dummy value", "DMV", "DMV");
+		Address address = new Address("78 Gnu Rd", "Texas", "666", country);
+		Customer customer = new Customer("Paul", "Mc Cartney", "pmac", "pmac", "paul@beales.com", address);
 
-        // Checks the object is valid
-        assertEquals("Should have not constraint violation", 0, validator.validate(customer).size());
-    }
+		// Checks the object is valid
+		assertEquals("Should have not constraint violation", 0, validator.validate(customer).size());
+	}
+
 }

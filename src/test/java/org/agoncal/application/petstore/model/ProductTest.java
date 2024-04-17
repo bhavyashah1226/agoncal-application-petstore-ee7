@@ -9,14 +9,19 @@ import org.junit.Test;
  */
 public class ProductTest {
 
-    // ======================================
-    // =              Methods               =
-    // ======================================
+	// ======================================
+	// = Methods =
+	// ======================================
 
-    @Test
-    public void shouldCheckEqualsAndHashCode() {
+	@Test
+	public void shouldCheckEqualsAndHashCode() {
 
-        // Checks equals and hashCode is valid
-        EqualsVerifier.forClass(Product.class).suppress(Warning.NONFINAL_FIELDS).withIgnoredFields("version", "category").usingGetClass().verify();
-    }
+		// Checks equals and hashCode is valid
+		EqualsVerifier.forClass(Product.class)
+			.suppress(Warning.NONFINAL_FIELDS)
+			.withIgnoredFields("version", "category")
+			.usingGetClass()
+			.verify();
+	}
+
 }

@@ -18,177 +18,159 @@ import java.util.Objects;
 @Entity
 @Cacheable
 @NamedQueries({
-         @NamedQuery(name = Item.FIND_BY_PRODUCT_ID, query = "SELECT i FROM Item i WHERE i.product.id = :productId"),
-         @NamedQuery(name = Item.SEARCH, query = "SELECT i FROM Item i WHERE UPPER(i.name) LIKE :keyword OR UPPER(i.product.name) LIKE :keyword ORDER BY i.product.category.name, i.product.name"),
-         @NamedQuery(name = Item.FIND_ALL, query = "SELECT i FROM Item i")
-})
+		@NamedQuery(name = Item.FIND_BY_PRODUCT_ID, query = "SELECT i FROM Item i WHERE i.product.id = :productId"),
+		@NamedQuery(name = Item.SEARCH,
+				query = "SELECT i FROM Item i WHERE UPPER(i.name) LIKE :keyword OR UPPER(i.product.name) LIKE :keyword ORDER BY i.product.category.name, i.product.name"),
+		@NamedQuery(name = Item.FIND_ALL, query = "SELECT i FROM Item i") })
 @XmlRootElement
-public class Item implements Serializable
-{
+public class Item implements Serializable {
 
-   // ======================================
-   // = Attributes =
-   // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
-   @Column(name = "id", updatable = false, nullable = false)
-   private Long id;
-   @Version
-   @Column(name = "version")
-   private int version;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id", updatable = false, nullable = false)
+	private Long id;
 
-   @Column(length = 30, nullable = false)
-   @NotNull
-   @Size(min = 1, max = 30)
-   private String name;
+	@Version
+	@Column(name = "version")
+	private int version;
 
-   @Column(length = 3000, nullable = false)
-   @NotNull
-   @Size(max = 3000)
-   private String description;
+	@Column(length = 30, nullable = false)
+	@NotNull
+	@Size(min = 1, max = 30)
+	private String name;
 
-   @Column(name = "image_path")
-   @NotEmpty
-   private String imagePath;
+	@Column(length = 3000, nullable = false)
+	@NotNull
+	@Size(max = 3000)
+	private String description;
 
-   @Column(name = "unit_cost", nullable = false)
-   @NotNull
-   @Price
-   private Float unitCost;
+	@Column(name = "image_path")
+	@NotEmpty
+	private String imagePath;
 
-   @ManyToOne(cascade = CascadeType.PERSIST)
-   @JoinColumn(name = "product_fk", nullable = false)
-   @XmlTransient
-   private Product product;
+	@Column(name = "unit_cost", nullable = false)
+	@NotNull
+	@Price
+	private Float unitCost;
 
-   // ======================================
-   // = Constants =
-   // ======================================
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "product_fk", nullable = false)
+	@XmlTransient
+	private Product product;
 
-   public static final String FIND_BY_PRODUCT_ID = "Item.findByProductId";
-   public static final String SEARCH = "Item.search";
-   public static final String FIND_ALL = "Item.findAll";
+	// ======================================
+	// = Constants =
+	// ======================================
 
-   // ======================================
-   // = Constructors =
-   // ======================================
+	public static final String FIND_BY_PRODUCT_ID = "Item.findByProductId";
 
-   public Item()
-   {
-   }
+	public static final String SEARCH = "Item.search";
 
-   public Item(String name, Float unitCost, String imagePath, String description, Product product)
-   {
-      this.name = name;
-      this.unitCost = unitCost;
-      this.imagePath = imagePath;
-      this.description = description;
-      this.product = product;
-   }
+	public static final String FIND_ALL = "Item.findAll";
 
-   // ======================================
-   // = Getters & setters =
-   // ======================================
+	// ======================================
+	// = Constructors =
+	// ======================================
 
-   public Long getId()
-   {
-      return this.id;
-   }
+	public Item() {
+	}
 
-   public void setId(final Long id)
-   {
-      this.id = id;
-   }
+	public Item(String name, Float unitCost, String imagePath, String description, Product product) {
+		this.name = name;
+		this.unitCost = unitCost;
+		this.imagePath = imagePath;
+		this.description = description;
+		this.product = product;
+	}
 
-   public int getVersion()
-   {
-      return this.version;
-   }
+	// ======================================
+	// = Getters & setters =
+	// ======================================
 
-   public void setVersion(final int version)
-   {
-      this.version = version;
-   }
+	public Long getId() {
+		return this.id;
+	}
 
-   public String getName()
-   {
-      return name;
-   }
+	public void setId(final Long id) {
+		this.id = id;
+	}
 
-   public void setName(String name)
-   {
-      this.name = name;
-   }
+	public int getVersion() {
+		return this.version;
+	}
 
-   public String getDescription()
-   {
-      return description;
-   }
+	public void setVersion(final int version) {
+		this.version = version;
+	}
 
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+	public String getName() {
+		return name;
+	}
 
-   public String getImagePath()
-   {
-      return imagePath;
-   }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-   public void setImagePath(String imagePath)
-   {
-      this.imagePath = imagePath;
-   }
+	public String getDescription() {
+		return description;
+	}
 
-   public Float getUnitCost()
-   {
-      return unitCost;
-   }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-   public void setUnitCost(Float unitCost)
-   {
-      this.unitCost = unitCost;
-   }
+	public String getImagePath() {
+		return imagePath;
+	}
 
-   public Product getProduct()
-   {
-      return this.product;
-   }
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
 
-   public void setProduct(final Product product)
-   {
-      this.product = product;
-   }
+	public Float getUnitCost() {
+		return unitCost;
+	}
 
-   // ======================================
-   // = Methods hash, equals, toString =
-   // ======================================
+	public void setUnitCost(Float unitCost) {
+		this.unitCost = unitCost;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Item item = (Item) o;
-        return name.equals(item.name) && description.equals(item.description);
-    }
+	public Product getProduct() {
+		return this.product;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, description);
-    }
+	public void setProduct(final Product product) {
+		this.product = product;
+	}
 
-    @Override
-   public String toString()
-   {
-      return "Item{" +
-               "id=" + id +
-               ", version=" + version +
-               ", name='" + name + '\'' +
-               ", description='" + description + '\'' +
-               ", imagePath='" + imagePath + '\'' +
-               ", unitCost=" + unitCost +
-               ", product=" + product +
-               '}';
-   }
+	// ======================================
+	// = Methods hash, equals, toString =
+	// ======================================
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Item item = (Item) o;
+		return name.equals(item.name) && description.equals(item.description);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, description);
+	}
+
+	@Override
+	public String toString() {
+		return "Item{" + "id=" + id + ", version=" + version + ", name='" + name + '\'' + ", description='"
+				+ description + '\'' + ", imagePath='" + imagePath + '\'' + ", unitCost=" + unitCost + ", product="
+				+ product + '}';
+	}
+
 }

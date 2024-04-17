@@ -9,15 +9,21 @@ import org.junit.Test;
  */
 public class CustomerTest {
 
-    // ======================================
-    // =              Methods               =
-    // ======================================
+	// ======================================
+	// = Methods =
+	// ======================================
 
-    @Test
-    public void shouldCheckEqualsAndHashCode() {
+	@Test
+	public void shouldCheckEqualsAndHashCode() {
 
-        // Checks equals and hashCode is valid
-        EqualsVerifier.forClass(Customer.class).suppress(Warning.NONFINAL_FIELDS).withIgnoredFields("version", "firstName", "lastName", "telephone", "email",
-            "password", "uuid", "role", "dateOfBirth", "homeAddress").withNonnullFields("login").usingGetClass().verify();
-    }
+		// Checks equals and hashCode is valid
+		EqualsVerifier.forClass(Customer.class)
+			.suppress(Warning.NONFINAL_FIELDS)
+			.withIgnoredFields("version", "firstName", "lastName", "telephone", "email", "password", "uuid", "role",
+					"dateOfBirth", "homeAddress")
+			.withNonnullFields("login")
+			.usingGetClass()
+			.verify();
+	}
+
 }

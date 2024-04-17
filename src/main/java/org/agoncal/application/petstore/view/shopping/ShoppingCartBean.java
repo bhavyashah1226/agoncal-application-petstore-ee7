@@ -18,9 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Named
@@ -29,138 +27,142 @@ import java.util.List;
 @CatchException
 public class ShoppingCartBean extends AbstractBean implements Serializable {
 
-    // ======================================
-    // =             Attributes             =
-    // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-    @Inject
-    @LoggedIn
-    private Instance<Customer> loggedInCustomer;
-    @Inject
-    private CatalogService catalogBean;
-    @Inject
-    private PurchaseOrderService orderBean;
-    @Inject
-    private Conversation conversation;
+	@Inject
+	@LoggedIn
+	private Instance<Customer> loggedInCustomer;
 
-    private List<ShoppingCartItem> cartItems;
-    private CreditCard creditCard = new CreditCard();
-    private PurchaseOrder order;
+	@Inject
+	private CatalogService catalogBean;
 
-    // ======================================
-    // =              Public Methods        =
-    // ======================================
+	@Inject
+	private PurchaseOrderService orderBean;
 
-    public String addItemToCart() {
-        Item item = catalogBean.findItem(getParamId("itemId"));
+	@Inject
+	private Conversation conversation;
 
-        // Start conversation
-        if (conversation.isTransient()) {
-            cartItems = new ArrayList<>();
-            conversation.begin();
-        }
+	private List<ShoppingCartItem> cartItems;
 
-        boolean itemFound = false;
-        for (ShoppingCartItem cartItem : cartItems) {
-            // If item already exists in the shopping cart we just change the quantity
-            if (cartItem.getItem().equals(item)) {
-                cartItem.setQuantity(cartItem.getQuantity() + 1);
-                itemFound = true;
-            }
-        }
-        if (!itemFound)
-            // Otherwise it's added to the shopping cart
-            cartItems.add(new ShoppingCartItem(item, 1));
+	private CreditCard creditCard = new CreditCard();
 
-        return "showcart.faces";
-    }
+	private PurchaseOrder order;
 
-    public String removeItemFromCart() {
-        Item item = catalogBean.findItem(getParamId("itemId"));
+	// ======================================
+	// = Public Methods =
+	// ======================================
 
-        for (ShoppingCartItem cartItem : cartItems) {
-            if (cartItem.getItem().equals(item)) {
-                cartItems.remove(cartItem);
-                return null;
-            }
-        }
+	public String addItemToCart() {
+		Item item = catalogBean.findItem(getParamId("itemId"));
 
-        return null;
-    }
+		// Start conversation
+		if (conversation.isTransient()) {
+			cartItems = new ArrayList<>();
+			conversation.begin();
+		}
 
-    public String updateQuantity() {
-        return null;
-    }
+		boolean itemFound = false;
+		for (ShoppingCartItem cartItem : cartItems) {
+			// If item already exists in the shopping cart we just change the quantity
+			if (cartItem.getItem().equals(item)) {
+				cartItem.setQuantity(cartItem.getQuantity() + 1);
+				itemFound = true;
+			}
+		}
+		if (!itemFound)
+			// Otherwise it's added to the shopping cart
+			cartItems.add(new ShoppingCartItem(item, 1));
 
-    public String checkout() {
-        return "confirmorder.faces";
-    }
+		return "showcart.faces";
+	}
 
-    public String confirmOrder() {
-        order = orderBean.createOrder(getCustomer(), creditCard, getCartItems());
-        cartItems.clear();
+	public String removeItemFromCart() {
+		Item item = catalogBean.findItem(getParamId("itemId"));
 
-        // Stop conversation
-        if (!conversation.isTransient()) {
-            conversation.end();
-        }
+		for (ShoppingCartItem cartItem : cartItems) {
+			if (cartItem.getItem().equals(item)) {
+				cartItems.remove(cartItem);
+				return null;
+			}
+		}
 
-        return "orderconfirmed.faces";
-    }
+		return null;
+	}
 
-    public List<ShoppingCartItem> getCartItems() {
-        return cartItems;
-    }
+	public String updateQuantity() {
+		return null;
+	}
 
-    public boolean shoppingCartIsEmpty() {
-        return getCartItems() == null || getCartItems().size() == 0;
-    }
+	public String checkout() {
+		return "confirmorder.faces";
+	}
 
+	public String confirmOrder() {
+		order = orderBean.createOrder(getCustomer(), creditCard, getCartItems());
+		cartItems.clear();
 
-    public Float getTotal() {
+		// Stop conversation
+		if (!conversation.isTransient()) {
+			conversation.end();
+		}
 
-        if (cartItems == null || cartItems.isEmpty())
-            return 0f;
+		return "orderconfirmed.faces";
+	}
 
-        Float total = 0f;
+	public List<ShoppingCartItem> getCartItems() {
+		return cartItems;
+	}
 
-        // Sum up the quantities
-        for (ShoppingCartItem cartItem : cartItems) {
-            total += (cartItem.getSubTotal());
-        }
-        return total;
-    }
+	public boolean shoppingCartIsEmpty() {
+		return getCartItems() == null || getCartItems().size() == 0;
+	}
 
-    // ======================================
-    // =         Getters & setters          =
-    // ======================================
+	public Float getTotal() {
 
-    public Customer getCustomer() {
-        return loggedInCustomer.get();
-    }
+		if (cartItems == null || cartItems.isEmpty())
+			return 0f;
 
+		Float total = 0f;
 
-    public CreditCard getCreditCard() {
-        return creditCard;
-    }
+		// Sum up the quantities
+		for (ShoppingCartItem cartItem : cartItems) {
+			total += (cartItem.getSubTotal());
+		}
+		return total;
+	}
 
-    public void setCreditCard(CreditCard creditCard) {
-        this.creditCard = creditCard;
-    }
+	// ======================================
+	// = Getters & setters =
+	// ======================================
 
-    public PurchaseOrder getOrder() {
-        return order;
-    }
+	public Customer getCustomer() {
+		return loggedInCustomer.get();
+	}
 
-    public void setOrder(PurchaseOrder order) {
-        this.order = order;
-    }
+	public CreditCard getCreditCard() {
+		return creditCard;
+	}
 
-    public Conversation getConversation() {
-        return conversation;
-    }
+	public void setCreditCard(CreditCard creditCard) {
+		this.creditCard = creditCard;
+	}
 
-    public CreditCardType[] getCreditCardTypes() {
-        return CreditCardType.values();
-    }
+	public PurchaseOrder getOrder() {
+		return order;
+	}
+
+	public void setOrder(PurchaseOrder order) {
+		this.order = order;
+	}
+
+	public Conversation getConversation() {
+		return conversation;
+	}
+
+	public CreditCardType[] getCreditCardTypes() {
+		return CreditCardType.values();
+	}
+
 }

@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Named
@@ -19,30 +17,30 @@ import java.util.List;
 @CatchException
 public class DebugBean extends AbstractBean {
 
-    // ======================================
-    // =              Public Methods        =
-    // ======================================
+	// ======================================
+	// = Public Methods =
+	// ======================================
 
-    public List<String> getThreadStack() {
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        List<String> elements = new ArrayList<>();
-        for (StackTraceElement stackTraceElement : stackTraceElements) {
-            elements.add(stackTraceElement.getClassName() + "." +
-                    stackTraceElement.getMethodName() +
-                    "(" + stackTraceElement.getFileName() + ":" + stackTraceElement.getLineNumber() + ")");
-        }
-        return elements;
-    }
+	public List<String> getThreadStack() {
+		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+		List<String> elements = new ArrayList<>();
+		for (StackTraceElement stackTraceElement : stackTraceElements) {
+			elements.add(stackTraceElement.getClassName() + "." + stackTraceElement.getMethodName() + "("
+					+ stackTraceElement.getFileName() + ":" + stackTraceElement.getLineNumber() + ")");
+		}
+		return elements;
+	}
 
-    public String getWorkingDirectory() {
-        return new java.io.File(".").getAbsolutePath();
-    }
+	public String getWorkingDirectory() {
+		return new java.io.File(".").getAbsolutePath();
+	}
 
-    public String getTotalMemory() {
-        return String.valueOf(Runtime.getRuntime().totalMemory());
-    }
+	public String getTotalMemory() {
+		return String.valueOf(Runtime.getRuntime().totalMemory());
+	}
 
-    public String getFreeMemory() {
-        return String.valueOf(Runtime.getRuntime().freeMemory());
-    }
+	public String getFreeMemory() {
+		return String.valueOf(Runtime.getRuntime().freeMemory());
+	}
+
 }

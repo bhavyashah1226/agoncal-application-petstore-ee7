@@ -16,76 +16,73 @@ import javax.inject.Inject;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-public class ProductBeanIT
-{
+public class ProductBeanIT {
 
-   // ======================================
-   // =             Attributes             =
-   // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-   @Inject
-   private ProductBean productbean;
+	@Inject
+	private ProductBean productbean;
 
-   // ======================================
-   // =             Deployment             =
-   // ======================================
+	// ======================================
+	// = Deployment =
+	// ======================================
 
-   @Deployment
-   public static JavaArchive createDeployment()
-   {
-      return ShrinkWrap.create(JavaArchive.class)
-            .addClass(ProductBean.class)
-            .addClass(Product.class)
-            .addClass(Category.class)
-            .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-   }
+	@Deployment
+	public static JavaArchive createDeployment() {
+		return ShrinkWrap.create(JavaArchive.class)
+			.addClass(ProductBean.class)
+			.addClass(Product.class)
+			.addClass(Category.class)
+			.addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+			.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+	}
 
-   // ======================================
-   // =             Test Cases             =
-   // ======================================
+	// ======================================
+	// = Test Cases =
+	// ======================================
 
-   @Test
-   public void should_be_deployed()
-   {
-      Assert.assertNotNull(productbean);
-   }
+	@Test
+	public void should_be_deployed() {
+		Assert.assertNotNull(productbean);
+	}
 
-   @Test
-   public void should_crud()
-   {
-      // Creates an object
-      Category category = new Category("Dummy value", "Dummy value");
-      Product product = new Product("Dummy value", "Dummy value", category);
+	@Test
+	public void should_crud() {
+		// Creates an object
+		Category category = new Category("Dummy value", "Dummy value");
+		Product product = new Product("Dummy value", "Dummy value", category);
 
-      // Inserts the object into the database
-      productbean.setProduct(product);
-      productbean.create();
-      productbean.update();
-      product = productbean.getProduct();
-      assertNotNull(product.getId());
+		// Inserts the object into the database
+		productbean.setProduct(product);
+		productbean.create();
+		productbean.update();
+		product = productbean.getProduct();
+		assertNotNull(product.getId());
 
-      // Finds the object from the database and checks it's the right one
-      product = productbean.findById(product.getId());
-      assertEquals("Dummy value", product.getName());
+		// Finds the object from the database and checks it's the right one
+		product = productbean.findById(product.getId());
+		assertEquals("Dummy value", product.getName());
 
-      // Deletes the object from the database and checks it's not there anymore
-      productbean.setId(product.getId());
-      productbean.create();
-      productbean.delete();
-      product = productbean.findById(product.getId());
-      assertNull(product);
-   }
+		// Deletes the object from the database and checks it's not there anymore
+		productbean.setId(product.getId());
+		productbean.create();
+		productbean.delete();
+		product = productbean.findById(product.getId());
+		assertNull(product);
+	}
 
-   @Test
-   public void should_paginate()
-   {
-      // Creates an empty example
-      Product example = new Product();
+	@Test
+	public void should_paginate() {
+		// Creates an empty example
+		Product example = new Product();
 
-      // Paginates through the example
-      productbean.setExample(example);
-      productbean.paginate();
-      assertTrue((productbean.getPageItems().size() == productbean.getPageSize()) || (productbean.getPageItems().size() == productbean.getCount()));
-   }
+		// Paginates through the example
+		productbean.setExample(example);
+		productbean.paginate();
+		assertTrue((productbean.getPageItems().size() == productbean.getPageSize())
+				|| (productbean.getPageItems().size() == productbean.getCount()));
+	}
+
 }
