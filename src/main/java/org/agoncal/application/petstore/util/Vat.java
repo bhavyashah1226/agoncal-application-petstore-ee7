@@ -9,9 +9,8 @@ import java.lang.annotation.Documented;
 
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER,
-      ElementType.TYPE })
+@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
 @Documented
-public @interface Vat
-{
+public @interface Vat {
+
 }

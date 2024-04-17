@@ -19,39 +19,41 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Arquillian.class)
 public class PurchaseOrderIT {
 
-    // ======================================
-    // =             Attributes             =
-    // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-    @Inject
-    private Validator validator;
+	@Inject
+	private Validator validator;
 
-    // ======================================
-    // =          Lifecycle Methods         =
-    // ======================================
+	// ======================================
+	// = Lifecycle Methods =
+	// ======================================
 
-    @Deployment
-    public static JavaArchive jar() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClasses(Address.class, Customer.class, CreditCard.class, CreditCardType.class, PurchaseOrder.class, Country.class, OrderLine.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
+	@Deployment
+	public static JavaArchive jar() {
+		return ShrinkWrap.create(JavaArchive.class)
+			.addClasses(Address.class, Customer.class, CreditCard.class, CreditCardType.class, PurchaseOrder.class,
+					Country.class, OrderLine.class)
+			.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+	}
 
-    // ======================================
-    // =              Methods               =
-    // ======================================
+	// ======================================
+	// = Methods =
+	// ======================================
 
-    @Test
-    public void shouldCreateAValidOrder() {
+	@Test
+	public void shouldCreateAValidOrder() {
 
-        // Creates an object
-        Country country = new Country("DV", "Dummy value", "Dummy value", "DMV", "DMV");
-        Address address = new Address("78 Gnu Rd", "Texas", "666", country);
-        Customer customer = new Customer("Paul", "Mc Cartney", "pmac", "pmac", "paul@beales.com", address);
-        CreditCard creditCard = new CreditCard("123456789", CreditCardType.VISA, "12/45");
-        PurchaseOrder order = new PurchaseOrder(customer, creditCard, address);
+		// Creates an object
+		Country country = new Country("DV", "Dummy value", "Dummy value", "DMV", "DMV");
+		Address address = new Address("78 Gnu Rd", "Texas", "666", country);
+		Customer customer = new Customer("Paul", "Mc Cartney", "pmac", "pmac", "paul@beales.com", address);
+		CreditCard creditCard = new CreditCard("123456789", CreditCardType.VISA, "12/45");
+		PurchaseOrder order = new PurchaseOrder(customer, creditCard, address);
 
-        // Checks the object is valid
-        assertEquals("Should have not constraint violation", 0, validator.validate(order).size());
-    }
+		// Checks the object is valid
+		assertEquals("Should have not constraint violation", 0, validator.validate(order).size());
+	}
+
 }
