@@ -16,39 +16,35 @@ import org.agoncal.application.petstore.util.Loggable;
 @Stateless
 @LocalBean
 @Loggable
-public class OrderLineService extends AbstractService<OrderLine> implements Serializable
-{
+public class OrderLineService extends AbstractService<OrderLine> implements Serializable {
 
-   // ======================================
-   // =            Constructors            =
-   // ======================================
+	// ======================================
+	// = Constructors =
+	// ======================================
 
-   public OrderLineService()
-   {
-      super(OrderLine.class);
-   }
+	public OrderLineService() {
+		super(OrderLine.class);
+	}
 
-   // ======================================
-   // =         Protected methods          =
-   // ======================================
+	// ======================================
+	// = Protected methods =
+	// ======================================
 
-   @Override
-   protected Predicate[] getSearchPredicates(Root<OrderLine> root, OrderLine example)
-   {
-      CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-      List<Predicate> predicatesList = new ArrayList<Predicate>();
+	@Override
+	protected Predicate[] getSearchPredicates(Root<OrderLine> root, OrderLine example) {
+		CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+		List<Predicate> predicatesList = new ArrayList<Predicate>();
 
-      Integer quantity = example.getQuantity();
-      if (quantity != null && quantity.intValue() != 0)
-      {
-         predicatesList.add(builder.equal(root.get("quantity"), quantity));
-      }
-      Item item = example.getItem();
-      if (item != null)
-      {
-         predicatesList.add(builder.equal(root.get("item"), item));
-      }
+		Integer quantity = example.getQuantity();
+		if (quantity != null && quantity.intValue() != 0) {
+			predicatesList.add(builder.equal(root.get("quantity"), quantity));
+		}
+		Item item = example.getItem();
+		if (item != null) {
+			predicatesList.add(builder.equal(root.get("item"), item));
+		}
 
-      return predicatesList.toArray(new Predicate[predicatesList.size()]);
-   }
+		return predicatesList.toArray(new Predicate[predicatesList.size()]);
+	}
+
 }

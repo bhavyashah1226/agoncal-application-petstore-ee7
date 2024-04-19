@@ -9,14 +9,19 @@ import org.junit.Test;
  */
 public class CountryTest {
 
-    // ======================================
-    // =              Methods               =
-    // ======================================
+	// ======================================
+	// = Methods =
+	// ======================================
 
-    @Test
-    public void shouldCheckEqualsAndHashCode() {
+	@Test
+	public void shouldCheckEqualsAndHashCode() {
 
-        // Checks equals and hashCode is valid
-        EqualsVerifier.forClass(Country.class).suppress(Warning.NONFINAL_FIELDS).withIgnoredFields("version","name", "printableName", "iso3", "numcode").usingGetClass().verify();
-    }
+		// Checks equals and hashCode is valid
+		EqualsVerifier.forClass(Country.class)
+			.suppress(Warning.NONFINAL_FIELDS)
+			.withIgnoredFields("version", "name", "printableName", "iso3", "numcode")
+			.usingGetClass()
+			.verify();
+	}
+
 }

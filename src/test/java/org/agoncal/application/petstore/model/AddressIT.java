@@ -19,36 +19,37 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Arquillian.class)
 public class AddressIT {
 
-    // ======================================
-    // =             Attributes             =
-    // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-    @Inject
-    private Validator validator;
+	@Inject
+	private Validator validator;
 
-    // ======================================
-    // =          Lifecycle Methods         =
-    // ======================================
+	// ======================================
+	// = Lifecycle Methods =
+	// ======================================
 
-    @Deployment
-    public static JavaArchive jar() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClasses(Address.class, Country.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
+	@Deployment
+	public static JavaArchive jar() {
+		return ShrinkWrap.create(JavaArchive.class)
+			.addClasses(Address.class, Country.class)
+			.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+	}
 
-    // ======================================
-    // =              Methods               =
-    // ======================================
+	// ======================================
+	// = Methods =
+	// ======================================
 
-    @Test
-    public void shouldCreateAValidAddress() {
+	@Test
+	public void shouldCreateAValidAddress() {
 
-        // Creates an object
-        Country country = new Country("DV", "Dummy value", "Dummy value", "DMV", "DMV");
-        Address address = new Address("Street1", "City", "Zipcode", country);
+		// Creates an object
+		Country country = new Country("DV", "Dummy value", "Dummy value", "DMV", "DMV");
+		Address address = new Address("Street1", "City", "Zipcode", country);
 
-        // Checks the object is valid
-        assertEquals("Should have not constraint violation", 0, validator.validate(address).size());
-    }
+		// Checks the object is valid
+		assertEquals("Should have not constraint violation", 0, validator.validate(address).size());
+	}
+
 }
