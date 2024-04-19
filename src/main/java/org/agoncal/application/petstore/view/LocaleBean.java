@@ -10,9 +10,7 @@ import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Named
@@ -20,23 +18,24 @@ import java.util.Locale;
 @Loggable
 public class LocaleBean implements Serializable {
 
-    @Produces
-    private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+	@Produces
+	private Locale locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
-    // ======================================
-    // =          Business methods          =
-    // ======================================
+	// ======================================
+	// = Business methods =
+	// ======================================
 
-    public Locale getLocale() {
-        return locale;
-    }
+	public Locale getLocale() {
+		return locale;
+	}
 
-    public String getLanguage() {
-        return locale.getLanguage();
-    }
+	public String getLanguage() {
+		return locale.getLanguage();
+	}
 
-    public void setLanguage(String language) {
-        locale = new Locale(language);
-        FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
-    }
+	public void setLanguage(String language) {
+		locale = new Locale(language);
+		FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
+	}
+
 }

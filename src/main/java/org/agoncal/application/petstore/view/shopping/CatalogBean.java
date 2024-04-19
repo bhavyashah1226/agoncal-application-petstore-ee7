@@ -14,123 +14,128 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Named
-//@RequestScoped TODO should be request scoped
+// @RequestScoped TODO should be request scoped
 @SessionScoped
 @Loggable
 @CatchException
 public class CatalogBean extends AbstractBean implements Serializable {
 
-    // ======================================
-    // =             Attributes             =
-    // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-    @Inject
-    private CatalogService catalogService;
+	@Inject
+	private CatalogService catalogService;
 
-    private String categoryName;
-    private Long productId;
-    private Long itemId;
+	private String categoryName;
 
-    private String keyword;
-    private Product product;
-    private Item item;
-    private List<Product> products;
-    private List<Item> items;
+	private Long productId;
 
-    // ======================================
-    // =              Public Methods        =
-    // ======================================
+	private Long itemId;
 
-    public String doFindProducts() {
-        products = catalogService.findProducts(categoryName);
-        return "showproducts.faces";
-    }
+	private String keyword;
 
-    public String doFindItems() {
-        product = catalogService.findProduct(productId);
-        items = catalogService.findItems(productId);
-        return "showitems.faces";
-    }
+	private Product product;
 
-    public String doFindItem() {
-        item = catalogService.findItem(itemId);
-        return "showitem.faces";
-    }
+	private Item item;
 
-    /**
-     * Can also be invoked in a RESTful way :
-     * http://localhost:8080/applicationPetstore/searchresult.xhtml?keyword=tail
-     */
-    public String doSearch() {
-        items = catalogService.searchItems(keyword);
-//        return "searchresult";
-        return "searchresult.faces&faces-redirect=true";
-//        return "searchresult.faces?keyword=" + keyword + "&faces-redirect=true";
-    }
+	private List<Product> products;
 
-    // ======================================
-    // =         Getters & setters          =
-    // ======================================
+	private List<Item> items;
 
-    public Product getProduct() {
-        return product;
-    }
+	// ======================================
+	// = Public Methods =
+	// ======================================
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
+	public String doFindProducts() {
+		products = catalogService.findProducts(categoryName);
+		return "showproducts.faces";
+	}
 
-    public Item getItem() {
-        return item;
-    }
+	public String doFindItems() {
+		product = catalogService.findProduct(productId);
+		items = catalogService.findItems(productId);
+		return "showitems.faces";
+	}
 
-    public void setItem(Item item) {
-        this.item = item;
-    }
+	public String doFindItem() {
+		item = catalogService.findItem(itemId);
+		return "showitem.faces";
+	}
 
-    public List<Product> getProducts() {
-        return products;
-    }
+	/**
+	 * Can also be invoked in a RESTful way :
+	 * http://localhost:8080/applicationPetstore/searchresult.xhtml?keyword=tail
+	 */
+	public String doSearch() {
+		items = catalogService.searchItems(keyword);
+		// return "searchresult";
+		return "searchresult.faces&faces-redirect=true";
+		// return "searchresult.faces?keyword=" + keyword + "&faces-redirect=true";
+	}
 
-    public List<Item> getItems() {
-        return items;
-    }
+	// ======================================
+	// = Getters & setters =
+	// ======================================
 
-    public String getKeyword() {
-        return keyword;
-    }
+	public Product getProduct() {
+		return product;
+	}
 
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
-    }
+	public void setProduct(Product product) {
+		this.product = product;
+	}
 
-    public String getCategoryName() {
-        return categoryName;
-    }
+	public Item getItem() {
+		return item;
+	}
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
+	public void setItem(Item item) {
+		this.item = item;
+	}
 
-    public Long getProductId() {
-        return productId;
-    }
+	public List<Product> getProducts() {
+		return products;
+	}
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
+	public List<Item> getItems() {
+		return items;
+	}
 
-    public Long getItemId() {
-        return itemId;
-    }
+	public String getKeyword() {
+		return keyword;
+	}
 
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
-    }
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public Long getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
+
+	public Long getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(Long itemId) {
+		this.itemId = itemId;
+	}
+
 }

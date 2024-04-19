@@ -9,14 +9,20 @@ import org.junit.Test;
  */
 public class OrderLineTest {
 
-    // ======================================
-    // =              Methods               =
-    // ======================================
+	// ======================================
+	// = Methods =
+	// ======================================
 
-    @Test
-    public void shouldCheckEqualsAndHashCode() {
+	@Test
+	public void shouldCheckEqualsAndHashCode() {
 
-        // Checks equals and hashCode is valid
-        EqualsVerifier.forClass(OrderLine.class).suppress(Warning.NONFINAL_FIELDS).usingGetClass().withIgnoredFields("version").withNonnullFields("quantity", "item").verify();
-    }
+		// Checks equals and hashCode is valid
+		EqualsVerifier.forClass(OrderLine.class)
+			.suppress(Warning.NONFINAL_FIELDS)
+			.usingGetClass()
+			.withIgnoredFields("version")
+			.withNonnullFields("quantity", "item")
+			.verify();
+	}
+
 }

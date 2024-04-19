@@ -18,73 +18,70 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(Arquillian.class)
-public class ItemServiceIT
-{
+public class ItemServiceIT {
 
-   // ======================================
-   // =             Attributes             =
-   // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-   @Inject
-   private ItemService itemservice;
+	@Inject
+	private ItemService itemservice;
 
-   // ======================================
-   // =             Deployment             =
-   // ======================================
+	// ======================================
+	// = Deployment =
+	// ======================================
 
-   @Deployment
-   public static JavaArchive createDeployment()
-   {
-      return ShrinkWrap.create(JavaArchive.class)
-            .addClass(AbstractService.class)
-            .addClass(ItemService.class)
-            .addClass(Item.class)
-            .addClass(Product.class)
-            .addClass(Category.class)
-            .addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-   }
+	@Deployment
+	public static JavaArchive createDeployment() {
+		return ShrinkWrap.create(JavaArchive.class)
+			.addClass(AbstractService.class)
+			.addClass(ItemService.class)
+			.addClass(Item.class)
+			.addClass(Product.class)
+			.addClass(Category.class)
+			.addAsManifestResource("META-INF/persistence.xml", "persistence.xml")
+			.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+	}
 
-   // ======================================
-   // =             Test Cases             =
-   // ======================================
+	// ======================================
+	// = Test Cases =
+	// ======================================
 
-   @Test
-   public void should_be_deployed()
-   {
-      Assert.assertNotNull(itemservice);
-   }
+	@Test
+	public void should_be_deployed() {
+		Assert.assertNotNull(itemservice);
+	}
 
-   @Test
-   public void should_crud()
-   {
-      // Gets all the objects
-      int initialSize = itemservice.listAll().size();
+	@Test
+	public void should_crud() {
+		// Gets all the objects
+		int initialSize = itemservice.listAll().size();
 
-      // Creates an object
-      Category category = new Category("Dummy value", "Dummy value");
-      Product product = new Product("Dummy value", "Dummy value", category);
-      Item item = new Item("Dummy value", 10f, "Dummy value", "Dummy value", product);
+		// Creates an object
+		Category category = new Category("Dummy value", "Dummy value");
+		Product product = new Product("Dummy value", "Dummy value", category);
+		Item item = new Item("Dummy value", 10f, "Dummy value", "Dummy value", product);
 
-      // Inserts the object into the database
-      item = itemservice.persist(item);
-      assertNotNull(item.getId());
-      assertEquals(initialSize + 1, itemservice.listAll().size());
+		// Inserts the object into the database
+		item = itemservice.persist(item);
+		assertNotNull(item.getId());
+		assertEquals(initialSize + 1, itemservice.listAll().size());
 
-      // Finds the object from the database and checks it's the right one
-      item = itemservice.findById(item.getId());
-      assertEquals("Dummy value", item.getName());
+		// Finds the object from the database and checks it's the right one
+		item = itemservice.findById(item.getId());
+		assertEquals("Dummy value", item.getName());
 
-      // Updates the object
-      item.setName("A new value");
-      item = itemservice.merge(item);
+		// Updates the object
+		item.setName("A new value");
+		item = itemservice.merge(item);
 
-      // Finds the object from the database and checks it has been updated
-      item = itemservice.findById(item.getId());
-      assertEquals("A new value", item.getName());
+		// Finds the object from the database and checks it has been updated
+		item = itemservice.findById(item.getId());
+		assertEquals("A new value", item.getName());
 
-      // Deletes the object from the database and checks it's not there anymore
-      itemservice.remove(item);
-      assertEquals(initialSize, itemservice.listAll().size());
-   }
+		// Deletes the object from the database and checks it's not there anymore
+		itemservice.remove(item);
+		assertEquals(initialSize, itemservice.listAll().size());
+	}
+
 }

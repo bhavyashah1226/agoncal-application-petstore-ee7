@@ -6,10 +6,10 @@ import javax.inject.Inject;
 import javax.decorator.Delegate;
 
 @Decorator
-public abstract class PurchaseOrderDecorator implements ComputablePurchaseOrder
-{
+public abstract class PurchaseOrderDecorator implements ComputablePurchaseOrder {
 
-   @Inject
-   @Delegate
-   private ComputablePurchaseOrder delegate;
+	@Inject
+	@Delegate
+	private ComputablePurchaseOrder delegate;
+
 }

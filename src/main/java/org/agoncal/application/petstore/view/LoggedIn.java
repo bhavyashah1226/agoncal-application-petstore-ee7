@@ -8,13 +8,12 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * @author Antonio Goncalves
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
  */
 
 @Qualifier
 @Retention(RUNTIME)
-@Target({FIELD, TYPE, METHOD})
+@Target({ FIELD, TYPE, METHOD })
 public @interface LoggedIn {
+
 }

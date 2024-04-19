@@ -22,52 +22,55 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Arquillian.class)
 public class ItemIT {
 
-    // ======================================
-    // =             Attributes             =
-    // ======================================
+	// ======================================
+	// = Attributes =
+	// ======================================
 
-    @Inject
-    private Validator validator;
+	@Inject
+	private Validator validator;
 
-    // ======================================
-    // =          Lifecycle Methods         =
-    // ======================================
+	// ======================================
+	// = Lifecycle Methods =
+	// ======================================
 
-    @Deployment
-    public static JavaArchive jar() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClasses(Category.class, Product.class, Item.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
+	@Deployment
+	public static JavaArchive jar() {
+		return ShrinkWrap.create(JavaArchive.class)
+			.addClasses(Category.class, Product.class, Item.class)
+			.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+	}
 
-    // ======================================
-    // =              Methods               =
-    // ======================================
+	// ======================================
+	// = Methods =
+	// ======================================
 
-    @Test
-    public void shouldCreateAValidItem() {
+	@Test
+	public void shouldCreateAValidItem() {
 
-        // Creates an object
-        Category category = new Category("Fish", "Any of numerous cold-blooded aquatic vertebrates characteristically having fins, gills, and a streamlined body");
-        Product product = new Product("Bulldog", "Friendly dog from England", category);
-        Item item = new Item("Thootless fish", 10f, "fish1.gif", "desc", product);
+		// Creates an object
+		Category category = new Category("Fish",
+				"Any of numerous cold-blooded aquatic vertebrates characteristically having fins, gills, and a streamlined body");
+		Product product = new Product("Bulldog", "Friendly dog from England", category);
+		Item item = new Item("Thootless fish", 10f, "fish1.gif", "desc", product);
 
-        // Checks the object is valid
-        assertEquals("Should have not constraint violation", 0, validator.validate(item).size());
-    }
+		// Checks the object is valid
+		assertEquals("Should have not constraint violation", 0, validator.validate(item).size());
+	}
 
-    @Test
-    public void shouldBeAbleToMarshallAndUnmarchallIntoXML() throws Exception {
+	@Test
+	public void shouldBeAbleToMarshallAndUnmarchallIntoXML() throws Exception {
 
-        // Creates an object
-        Category category = new Category("Fish", "Any of numerous cold-blooded aquatic vertebrates characteristically having fins, gills, and a streamlined body");
-        Product product = new Product("Bulldog", "Friendly dog from England", category);
-        Item item = new Item("Thootless fish", 10f, "fish1.gif", "desc", product);
+		// Creates an object
+		Category category = new Category("Fish",
+				"Any of numerous cold-blooded aquatic vertebrates characteristically having fins, gills, and a streamlined body");
+		Product product = new Product("Bulldog", "Friendly dog from England", category);
+		Item item = new Item("Thootless fish", 10f, "fish1.gif", "desc", product);
 
-        // Marshalls it to XML
-        StringWriter writer = new StringWriter();
-        JAXBContext context = JAXBContext.newInstance(Item.class);
-        Marshaller m = context.createMarshaller();
-        m.marshal(item, writer);
-    }
+		// Marshalls it to XML
+		StringWriter writer = new StringWriter();
+		JAXBContext context = JAXBContext.newInstance(Item.class);
+		Marshaller m = context.createMarshaller();
+		m.marshal(item, writer);
+	}
+
 }
