@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CategoryEndpoint.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.rest</a> &gt; <span class="el_source">CategoryEndpoint.java</span></div><h1>CategoryEndpoint.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.rest;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.agoncal.application.petstore.model.Category;
+import org.agoncal.application.petstore.util.Loggable;
+
+import javax.ejb.Stateless;
+import javax.persistence.*;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriBuilder;
+import java.util.List;
+
+/**
+ * @author Antonio Goncalves http://www.antoniogoncalves.org --
+ */
+
+@Stateless
+@Path(&quot;/categories&quot;)
+@Loggable
+@Api(&quot;Category&quot;)
+<span class="nc" id="L24">public class CategoryEndpoint {</span>
+
+	// ======================================
+	// = Attributes =
+	// ======================================
+
+	@PersistenceContext(unitName = &quot;applicationPetstorePU&quot;)
+	private EntityManager em;
+
+	// ======================================
+	// = Business methods =
+	// ======================================
+
+	@POST
+	@Consumes({ &quot;application/xml&quot;, &quot;application/json&quot; })
+	@ApiOperation(&quot;Creates a category&quot;)
+	public Response create(Category entity) {
+<span class="nc" id="L41">		em.persist(entity);</span>
+<span class="nc" id="L42">		return Response</span>
+<span class="nc" id="L43">			.created(UriBuilder.fromResource(CategoryEndpoint.class).path(String.valueOf(entity.getId())).build())</span>
+<span class="nc" id="L44">			.build();</span>
+	}
+
+	@DELETE
+	@Path(&quot;/{id:[0-9][0-9]*}&quot;)
+	@ApiOperation(&quot;Deletes a category by id&quot;)
+	public Response deleteById(@PathParam(&quot;id&quot;) Long id) {
+<span class="nc" id="L51">		Category entity = em.find(Category.class, id);</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">		if (entity == null) {</span>
+<span class="nc" id="L53">			return Response.status(Status.NOT_FOUND).build();</span>
+		}
+<span class="nc" id="L55">		em.remove(entity);</span>
+<span class="nc" id="L56">		return Response.noContent().build();</span>
+	}
+
+	@GET
+	@Path(&quot;/{id:[0-9][0-9]*}&quot;)
+	@Produces({ &quot;application/xml&quot;, &quot;application/json&quot; })
+	@ApiOperation(&quot;Finds a category given an identifier&quot;)
+	public Response findById(@PathParam(&quot;id&quot;) Long id) {
+<span class="nc" id="L64">		TypedQuery&lt;Category&gt; findByIdQuery = em</span>
+<span class="nc" id="L65">			.createQuery(&quot;SELECT DISTINCT c FROM Category c WHERE c.id = :entityId ORDER BY c.id&quot;, Category.class);</span>
+<span class="nc" id="L66">		findByIdQuery.setParameter(&quot;entityId&quot;, id);</span>
+		Category entity;
+		try {
+<span class="nc" id="L69">			entity = findByIdQuery.getSingleResult();</span>
+		}
+<span class="nc" id="L71">		catch (NoResultException nre) {</span>
+<span class="nc" id="L72">			entity = null;</span>
+<span class="nc" id="L73">		}</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">		if (entity == null) {</span>
+<span class="nc" id="L75">			return Response.status(Status.NOT_FOUND).build();</span>
+		}
+<span class="nc" id="L77">		return Response.ok(entity).build();</span>
+	}
+
+	@GET
+	@Produces({ &quot;application/xml&quot;, &quot;application/json&quot; })
+	@ApiOperation(&quot;Lists all the categories&quot;)
+	public List&lt;Category&gt; listAll(@QueryParam(&quot;start&quot;) Integer startPosition, @QueryParam(&quot;max&quot;) Integer maxResult) {
+<span class="nc" id="L84">		TypedQuery&lt;Category&gt; findAllQuery = em.createQuery(&quot;SELECT DISTINCT c FROM Category c ORDER BY c.id&quot;,</span>
+				Category.class);
+<span class="nc bnc" id="L86" title="All 2 branches missed.">		if (startPosition != null) {</span>
+<span class="nc" id="L87">			findAllQuery.setFirstResult(startPosition);</span>
+		}
+<span class="nc bnc" id="L89" title="All 2 branches missed.">		if (maxResult != null) {</span>
+<span class="nc" id="L90">			findAllQuery.setMaxResults(maxResult);</span>
+		}
+<span class="nc" id="L92">		final List&lt;Category&gt; results = findAllQuery.getResultList();</span>
+<span class="nc" id="L93">		return results;</span>
+	}
+
+	@PUT
+	@Path(&quot;/{id:[0-9][0-9]*}&quot;)
+	@Consumes({ &quot;application/xml&quot;, &quot;application/json&quot; })
+	@ApiOperation(&quot;Updates a category&quot;)
+	public Response update(Category entity) {
+		try {
+<span class="nc" id="L102">			entity = em.merge(entity);</span>
+		}
+<span class="nc" id="L104">		catch (OptimisticLockException e) {</span>
+<span class="nc" id="L105">			return Response.status(Response.Status.CONFLICT).entity(e.getEntity()).build();</span>
+<span class="nc" id="L106">		}</span>
+
+<span class="nc" id="L108">		return Response.noContent().build();</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
