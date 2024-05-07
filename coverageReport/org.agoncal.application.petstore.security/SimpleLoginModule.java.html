@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimpleLoginModule.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.security</a> &gt; <span class="el_source">SimpleLoginModule.java</span></div><h1>SimpleLoginModule.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.security;
+
+import org.agoncal.application.petstore.model.Customer;
+import org.agoncal.application.petstore.service.CustomerService;
+
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.security.auth.Subject;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.login.LoginException;
+import javax.security.auth.spi.LoginModule;
+import java.util.Map;
+
+/**
+ * @author blep Date: 12/02/12 Time: 11:59
+ */
+
+<span class="nc" id="L25">public class SimpleLoginModule implements LoginModule {</span>
+
+	// ======================================
+	// = Attributes =
+	// ======================================
+
+	private CallbackHandler callbackHandler;
+
+	private CustomerService customerService;
+
+	private BeanManager beanManager;
+
+	// ======================================
+	// = Business methods =
+	// ======================================
+
+	private CustomerService getCustomerService() {
+<span class="nc bnc" id="L42" title="All 2 branches missed.">		if (customerService != null) {</span>
+<span class="nc" id="L43">			return customerService;</span>
+		}
+		try {
+<span class="nc" id="L46">			Context context = new InitialContext();</span>
+<span class="nc" id="L47">			beanManager = (BeanManager) context.lookup(&quot;java:comp/BeanManager&quot;);</span>
+<span class="nc" id="L48">			Bean&lt;?&gt; bean = beanManager.getBeans(CustomerService.class).iterator().next();</span>
+<span class="nc" id="L49">			CreationalContext cc = beanManager.createCreationalContext(bean);</span>
+<span class="nc" id="L50">			customerService = (CustomerService) beanManager.getReference(bean, CustomerService.class, cc);</span>
+
+		}
+<span class="nc" id="L53">		catch (NamingException e) {</span>
+<span class="nc" id="L54">			e.printStackTrace();</span>
+<span class="nc" id="L55">			throw new RuntimeException(e);</span>
+<span class="nc" id="L56">		}</span>
+
+<span class="nc" id="L58">		return customerService;</span>
+
+	}
+
+	@Override
+	public void initialize(Subject subject, CallbackHandler callbackHandler, Map&lt;String, ?&gt; stringMap,
+			Map&lt;String, ?&gt; stringMap1) {
+<span class="nc" id="L65">		this.callbackHandler = callbackHandler;</span>
+<span class="nc" id="L66">		getCustomerService();</span>
+<span class="nc" id="L67">	}</span>
+
+	@Override
+	public boolean login() throws LoginException {
+
+<span class="nc" id="L72">		NameCallback nameCallback = new NameCallback(&quot;Name : &quot;);</span>
+<span class="nc" id="L73">		PasswordCallback passwordCallback = new PasswordCallback(&quot;Password : &quot;, false);</span>
+		try {
+<span class="nc" id="L75">			callbackHandler.handle(new Callback[] { nameCallback, passwordCallback });</span>
+<span class="nc" id="L76">			String username = nameCallback.getName();</span>
+<span class="nc" id="L77">			String password = new String(passwordCallback.getPassword());</span>
+<span class="nc" id="L78">			nameCallback.setName(&quot;&quot;);</span>
+<span class="nc" id="L79">			passwordCallback.clearPassword();</span>
+<span class="nc" id="L80">			Customer customer = customerService.findCustomer(username, password);</span>
+
+<span class="nc bnc" id="L82" title="All 2 branches missed.">			if (customer == null) {</span>
+<span class="nc" id="L83">				throw new LoginException(&quot;Authentication failed&quot;);</span>
+			}
+
+<span class="nc" id="L86">			return true;</span>
+		}
+<span class="nc" id="L88">		catch (Exception e) {</span>
+<span class="nc" id="L89">			e.printStackTrace();</span>
+<span class="nc" id="L90">			throw new LoginException(e.getMessage());</span>
+		}
+	}
+
+	@Override
+	public boolean commit() throws LoginException {
+<span class="nc" id="L96">		return true;</span>
+	}
+
+	@Override
+	public boolean abort() throws LoginException {
+<span class="nc" id="L101">		return true;</span>
+	}
+
+	@Override
+	public boolean logout() throws LoginException {
+<span class="nc" id="L106">		return true;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
