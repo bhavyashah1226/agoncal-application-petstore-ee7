@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemBean.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Petstore application using Java EE 7</a> &gt; <a href="index.source.html" class="el_package">org.agoncal.application.petstore.view.admin</a> &gt; <span class="el_source">ItemBean.java</span></div><h1>ItemBean.java</h1><pre class="source lang-java linenums">package org.agoncal.application.petstore.view.admin;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.ejb.SessionContext;
+import javax.ejb.Stateful;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.agoncal.application.petstore.model.Item;
+import org.agoncal.application.petstore.model.Product;
+import org.agoncal.application.petstore.util.Loggable;
+
+/**
+ * Backing bean for Item entities.
+ * &lt;p/&gt;
+ * This class provides CRUD functionality for all Item entities. It focuses purely on Java
+ * EE 6 standards (e.g. &lt;tt&gt;&amp;#64;ConversationScoped&lt;/tt&gt; for state management,
+ * &lt;tt&gt;PersistenceContext&lt;/tt&gt; for persistence, &lt;tt&gt;CriteriaBuilder&lt;/tt&gt; for searches)
+ * rather than introducing a CRUD framework or custom base class.
+ */
+
+@Named
+@Stateful
+@ConversationScoped
+@Loggable
+<span class="nc" id="L44">public class ItemBean implements Serializable {</span>
+
+	private static final long serialVersionUID = 1L;
+
+	/*
+	 * Support creating and retrieving Item entities
+	 */
+
+	private Long id;
+
+	public Long getId() {
+<span class="nc" id="L55">		return this.id;</span>
+	}
+
+	public void setId(Long id) {
+<span class="nc" id="L59">		this.id = id;</span>
+<span class="nc" id="L60">	}</span>
+
+	private Item item;
+
+	public Item getItem() {
+<span class="nc" id="L65">		return this.item;</span>
+	}
+
+	public void setItem(Item item) {
+<span class="nc" id="L69">		this.item = item;</span>
+<span class="nc" id="L70">	}</span>
+
+	@Inject
+	private Conversation conversation;
+
+	@PersistenceContext(unitName = &quot;applicationPetstorePU&quot;, type = PersistenceContextType.EXTENDED)
+	private EntityManager entityManager;
+
+	public String create() {
+
+<span class="nc" id="L80">		this.conversation.begin();</span>
+<span class="nc" id="L81">		this.conversation.setTimeout(1800000L);</span>
+<span class="nc" id="L82">		return &quot;create?faces-redirect=true&quot;;</span>
+	}
+
+	public void retrieve() {
+
+<span class="nc bnc" id="L87" title="All 2 branches missed.">		if (FacesContext.getCurrentInstance().isPostback()) {</span>
+<span class="nc" id="L88">			return;</span>
+		}
+
+<span class="nc bnc" id="L91" title="All 2 branches missed.">		if (this.conversation.isTransient()) {</span>
+<span class="nc" id="L92">			this.conversation.begin();</span>
+<span class="nc" id="L93">			this.conversation.setTimeout(1800000L);</span>
+		}
+
+<span class="nc bnc" id="L96" title="All 2 branches missed.">		if (this.id == null) {</span>
+<span class="nc" id="L97">			this.item = this.example;</span>
+		}
+		else {
+<span class="nc" id="L100">			this.item = findById(getId());</span>
+		}
+<span class="nc" id="L102">	}</span>
+
+	public Item findById(Long id) {
+
+<span class="nc" id="L106">		return this.entityManager.find(Item.class, id);</span>
+	}
+
+	/*
+	 * Support updating and deleting Item entities
+	 */
+
+	public String update() {
+<span class="nc" id="L114">		this.conversation.end();</span>
+
+		try {
+<span class="nc bnc" id="L117" title="All 2 branches missed.">			if (this.id == null) {</span>
+<span class="nc" id="L118">				this.entityManager.persist(this.item);</span>
+<span class="nc" id="L119">				return &quot;search?faces-redirect=true&quot;;</span>
+			}
+			else {
+<span class="nc" id="L122">				this.entityManager.merge(this.item);</span>
+<span class="nc" id="L123">				return &quot;view?faces-redirect=true&amp;id=&quot; + this.item.getId();</span>
+			}
+		}
+<span class="nc" id="L126">		catch (Exception e) {</span>
+<span class="nc" id="L127">			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));</span>
+<span class="nc" id="L128">			return null;</span>
+		}
+	}
+
+	public String delete() {
+<span class="nc" id="L133">		this.conversation.end();</span>
+
+		try {
+<span class="nc" id="L136">			Item deletableEntity = findById(getId());</span>
+
+<span class="nc" id="L138">			this.entityManager.remove(deletableEntity);</span>
+<span class="nc" id="L139">			this.entityManager.flush();</span>
+<span class="nc" id="L140">			return &quot;search?faces-redirect=true&quot;;</span>
+		}
+<span class="nc" id="L142">		catch (Exception e) {</span>
+<span class="nc" id="L143">			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(e.getMessage()));</span>
+<span class="nc" id="L144">			return null;</span>
+		}
+	}
+
+	/*
+	 * Support searching Item entities with pagination
+	 */
+
+	private int page;
+
+	private long count;
+
+	private List&lt;Item&gt; pageItems;
+
+<span class="nc" id="L158">	private Item example = new Item();</span>
+
+	public int getPage() {
+<span class="nc" id="L161">		return this.page;</span>
+	}
+
+	public void setPage(int page) {
+<span class="nc" id="L165">		this.page = page;</span>
+<span class="nc" id="L166">	}</span>
+
+	public int getPageSize() {
+<span class="nc" id="L169">		return 10;</span>
+	}
+
+	public Item getExample() {
+<span class="nc" id="L173">		return this.example;</span>
+	}
+
+	public void setExample(Item example) {
+<span class="nc" id="L177">		this.example = example;</span>
+<span class="nc" id="L178">	}</span>
+
+	public String search() {
+<span class="nc" id="L181">		this.page = 0;</span>
+<span class="nc" id="L182">		return null;</span>
+	}
+
+	public void paginate() {
+
+<span class="nc" id="L187">		CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();</span>
+
+		// Populate this.count
+
+<span class="nc" id="L191">		CriteriaQuery&lt;Long&gt; countCriteria = builder.createQuery(Long.class);</span>
+<span class="nc" id="L192">		Root&lt;Item&gt; root = countCriteria.from(Item.class);</span>
+<span class="nc" id="L193">		countCriteria = countCriteria.select(builder.count(root)).where(getSearchPredicates(root));</span>
+<span class="nc" id="L194">		this.count = this.entityManager.createQuery(countCriteria).getSingleResult();</span>
+
+		// Populate this.pageItems
+
+<span class="nc" id="L198">		CriteriaQuery&lt;Item&gt; criteria = builder.createQuery(Item.class);</span>
+<span class="nc" id="L199">		root = criteria.from(Item.class);</span>
+<span class="nc" id="L200">		TypedQuery&lt;Item&gt; query = this.entityManager.createQuery(criteria.select(root).where(getSearchPredicates(root)));</span>
+<span class="nc" id="L201">		query.setFirstResult(this.page * getPageSize()).setMaxResults(getPageSize());</span>
+<span class="nc" id="L202">		this.pageItems = query.getResultList();</span>
+<span class="nc" id="L203">	}</span>
+
+	private Predicate[] getSearchPredicates(Root&lt;Item&gt; root) {
+
+<span class="nc" id="L207">		CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();</span>
+<span class="nc" id="L208">		List&lt;Predicate&gt; predicatesList = new ArrayList&lt;Predicate&gt;();</span>
+
+<span class="nc" id="L210">		String name = this.example.getName();</span>
+<span class="nc bnc" id="L211" title="All 4 branches missed.">		if (name != null &amp;&amp; !&quot;&quot;.equals(name)) {</span>
+<span class="nc" id="L212">			predicatesList.add(builder.like(builder.lower(root.&lt;String&gt;get(&quot;name&quot;)), '%' + name.toLowerCase() + '%'));</span>
+		}
+<span class="nc" id="L214">		String description = this.example.getDescription();</span>
+<span class="nc bnc" id="L215" title="All 4 branches missed.">		if (description != null &amp;&amp; !&quot;&quot;.equals(description)) {</span>
+<span class="nc" id="L216">			predicatesList.add(builder.like(builder.lower(root.&lt;String&gt;get(&quot;description&quot;)),</span>
+<span class="nc" id="L217">					'%' + description.toLowerCase() + '%'));</span>
+		}
+<span class="nc" id="L219">		String imagePath = this.example.getImagePath();</span>
+<span class="nc bnc" id="L220" title="All 4 branches missed.">		if (imagePath != null &amp;&amp; !&quot;&quot;.equals(imagePath)) {</span>
+<span class="nc" id="L221">			predicatesList</span>
+<span class="nc" id="L222">				.add(builder.like(builder.lower(root.&lt;String&gt;get(&quot;imagePath&quot;)), '%' + imagePath.toLowerCase() + '%'));</span>
+		}
+<span class="nc" id="L224">		Product product = this.example.getProduct();</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">		if (product != null) {</span>
+<span class="nc" id="L226">			predicatesList.add(builder.equal(root.get(&quot;product&quot;), product));</span>
+		}
+
+<span class="nc" id="L229">		return predicatesList.toArray(new Predicate[predicatesList.size()]);</span>
+	}
+
+	public List&lt;Item&gt; getPageItems() {
+<span class="nc" id="L233">		return this.pageItems;</span>
+	}
+
+	public long getCount() {
+<span class="nc" id="L237">		return this.count;</span>
+	}
+
+	/*
+	 * Support listing and POSTing back Item entities (e.g. from inside an
+	 * HtmlSelectOneMenu)
+	 */
+
+	public List&lt;Item&gt; getAll() {
+
+<span class="nc" id="L247">		CriteriaQuery&lt;Item&gt; criteria = this.entityManager.getCriteriaBuilder().createQuery(Item.class);</span>
+<span class="nc" id="L248">		return this.entityManager.createQuery(criteria.select(criteria.from(Item.class))).getResultList();</span>
+	}
+
+	@Resource
+	private SessionContext sessionContext;
+
+	public Converter getConverter() {
+
+<span class="nc" id="L256">		final ItemBean ejbProxy = this.sessionContext.getBusinessObject(ItemBean.class);</span>
+
+<span class="nc" id="L258">		return new Converter() {</span>
+
+			@Override
+			public Object getAsObject(FacesContext context, UIComponent component, String value) {
+
+<span class="nc" id="L263">				return ejbProxy.findById(Long.valueOf(value));</span>
+			}
+
+			@Override
+			public String getAsString(FacesContext context, UIComponent component, Object value) {
+
+<span class="nc bnc" id="L269" title="All 2 branches missed.">				if (value == null) {</span>
+<span class="nc" id="L270">					return &quot;&quot;;</span>
+				}
+
+<span class="nc" id="L273">				return String.valueOf(((Item) value).getId());</span>
+			}
+		};
+	}
+
+	/*
+	 * Support adding children to bidirectional, one-to-many tables
+	 */
+
+<span class="nc" id="L282">	private Item add = new Item();</span>
+
+	public Item getAdd() {
+<span class="nc" id="L285">		return this.add;</span>
+	}
+
+	public Item getAdded() {
+<span class="nc" id="L289">		Item added = this.add;</span>
+<span class="nc" id="L290">		this.add = new Item();</span>
+<span class="nc" id="L291">		return added;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
